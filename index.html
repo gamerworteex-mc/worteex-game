@@ -1,58 +1,69 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WORTEEX GAME | Minecraft Sunucusu</title>
+  <meta charset="UTF-8">
+  <title>WORTEEX GAME MC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Basit koruma -->
+  <meta name="robots" content="noarchive">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #fff;
       text-align: center;
+      background: 
+        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)),
+        url("https://images.unsplash.com/photo-1605902711622-cfb43c4437b5");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
 
     header {
-      padding: 60px 20px;
+      padding: 80px 20px 40px;
     }
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
-    }
-
-    h2 {
-      font-weight: normal;
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: 3px;
       color: #00ffd5;
-      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(0,255,213,0.6);
+    }
+
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-top: 10px;
     }
 
     .card {
-      background: rgba(0,0,0,0.4);
-      margin: 20px auto;
+      background: rgba(0,0,0,0.6);
+      margin: 25px auto;
       padding: 25px;
       max-width: 420px;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,255,213,0.3);
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
     }
 
-    .ip-box {
+    .ip {
       font-size: 20px;
-      margin-bottom: 15px;
+      margin: 10px 0;
       word-break: break-all;
     }
 
     button {
-      background: #00ffd5;
-      border: none;
-      color: #000;
-      padding: 12px 25px;
+      margin-top: 15px;
+      padding: 12px 26px;
       font-size: 16px;
       border-radius: 30px;
+      border: none;
       cursor: pointer;
+      background: #00ffd5;
+      color: #000;
       font-weight: bold;
     }
 
@@ -60,11 +71,16 @@
       background: #00cfae;
     }
 
+    .status {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
     footer {
-      margin-top: 50px;
+      margin-top: 60px;
       padding: 20px;
       font-size: 14px;
-      opacity: 0.8;
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -72,31 +88,63 @@
 <body>
 
   <header>
-    <h1>WORTEEX GAME</h1>
-    <h2>Minecraft Sunucusu</h2>
+    <div class="logo">WORTEEX GAME</div>
+    <div class="subtitle">Minecraft Sunucusu</div>
   </header>
 
   <div class="card">
-    <div class="ip-box">
-      <strong>Sunucu IP:</strong><br>
-      <span id="ip">WORTEEXGAME_MC.aternos.me</span>
-    </div>
-
+    <h2>🎮 Sunucu IP</h2>
+    <div class="ip" id="ip">WORTEEXGAME_MC.aternos.me</div>
     <button onclick="copyIP()">IP'yi Kopyala</button>
   </div>
 
+  <div class="card">
+    <h2>📊 Sunucu Durumu</h2>
+    <div class="status" id="status">Yükleniyor...</div>
+  </div>
+
+  <div class="card">
+    <h2>🛒 Market</h2>
+    <p>Market yakında aktif olacaktır.</p>
+    <p>Şimdilik satın alımlar Discord üzerinden yapılmaktadır.</p>
+
+    <button onclick="alert('Discord yakında eklenecek')">
+      💬 Discord
+    </button>
+  </div>
+
   <footer>
-    © 2026 WORTEEX GAME<br>
-    Tüm hakları saklıdır.
+    © 2026 WORTEEX GAME | Tüm hakları saklıdır
   </footer>
 
   <script>
+    // IP kopyalama
     function copyIP() {
-      const ipText = document.getElementById("ip").innerText;
-      navigator.clipboard.writeText(ipText);
-      alert("IP kopyalandı: " + ipText);
+      const ip = document.getElementById("ip").innerText;
+      navigator.clipboard.writeText(ip);
+      alert("IP kopyalandı: " + ip);
     }
+
+    // Online oyuncu sayısı
+    fetch("https://api.mcapi.us/server/status?ip=WORTEEXGAME_MC.aternos.me")
+      .then(res => res.json())
+      .then(data => {
+        const statusEl = document.getElementById("status");
+        if (data.online) {
+          statusEl.innerHTML = 
+            "🟢 Online<br>" +
+            "Oyuncular: " + data.players.now + " / " + data.players.max;
+        } else {
+          statusEl.innerHTML = "🔴 Offline";
+        }
+      })
+      .catch(() => {
+        document.getElementById("status").innerHTML = "❌ Durum alınamadı";
+      });
+
+    // Sağ tık kapatma (basit koruma)
+    document.addEventListener("contextmenu", e => e.preventDefault());
   </script>
 
 </body>
-</html>
+  </html>
