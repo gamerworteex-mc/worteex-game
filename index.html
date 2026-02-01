@@ -2,164 +2,133 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>WORTEEX GAME | Minecraft Sunucusu</title>
+<title>WORTEEX GAME</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-
 <style>
-body{
+*{
   margin:0;
-  font-family:Arial;
-  background:radial-gradient(circle at top,#0d1b2a,#05070d);
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url("https://images.alphacoders.com/132/1329014.jpeg");
+  background-size:cover;
+  background-position:center;
   color:white;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+
+.card{
+  background:rgba(0,0,0,0.65);
+  border-radius:14px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 0 20px rgba(0,0,0,0.8);
+}
+
+h1{
+  text-align:center;
+  color:#00ff88;
+  margin-bottom:10px;
+}
+
+.center{
   text-align:center;
 }
-section{padding:35px 15px;}
-.logo{max-width:320px;filter:drop-shadow(0 0 25px cyan);}
-.box{
-  background:rgba(255,255,255,0.06);
-  margin:20px auto;
-  padding:25px;
-  max-width:520px;
-  border-radius:18px;
-}
-button{
+
+.btn{
+  display:inline-block;
+  margin:8px;
   padding:12px 20px;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(135deg,#00c6ff,#0072ff);
-  color:white;
-  font-size:16px;
+  background:#00ff88;
+  color:black;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:bold;
   cursor:pointer;
-  margin:5px;
 }
-input{
-  width:80%;
-  padding:11px;
-  margin:6px 0;
-  border-radius:10px;
-  border:none;
+
+.btn:hover{
+  background:#00cc6f;
 }
-.hidden{display:none;}
-.green{color:#00ff9d;}
-.yellow{color:gold;}
-.market-item{
-  border:1px solid rgba(255,255,255,0.15);
-  padding:15px;
-  border-radius:12px;
-  margin:10px 0;
+
+.small{
+  color:#ccc;
+  font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<section>
-  <img src="1769948637901.png" class="logo">
-</section>
+<div class="container">
 
-<section class="box">
-  <h2>🌍 Sunucu Bilgileri</h2>
-  <p><b>IP:</b> WORTEEXGAME_MC.aternos.me</p>
-  <button onclick="copyIP()">IP Kopyala</button>
-  <p>👥 Online Oyuncu: <span id="online" class="green">Yükleniyor...</span></p>
-</section>
-
-<section id="auth" class="box">
-  <h2>🔐 Giriş / Kayıt</h2>
-  <input id="username" placeholder="Kullanıcı Adı">
-  <input id="password" type="password" placeholder="Şifre">
-  <br>
-  <button onclick="login()">Giriş</button>
-  <button onclick="register()">Kayıt</button>
-</section>
-
-<section id="user" class="box hidden">
-  <h2>👋 Hoş geldin, <span id="userName"></span></h2>
-  <p>💰 WX Bakiyesi: <span id="wx" class="yellow"></span></p>
-</section>
-
-<!-- MARKET -->
-<section id="market" class="box hidden">
-  <h2>🛒 Market</h2>
-
-  <div class="market-item">
-    <h3>🗡️ Elmas Kılıç</h3>
-    <p>Fiyat: 50 WX</p>
-    <button onclick="buy(50,'Elmas Kılıç')">Satın Al</button>
+  <!-- BAŞLIK -->
+  <div class="card center">
+    <h1>WORTEEX GAME</h1>
+    <p>Minecraft Sunucusu</p>
+    <p class="small">IP: <b id="ip">WORTEEXGAME_MC.aternos.me</b></p>
+    <button class="btn" onclick="copyIP()">IP Kopyala</button>
   </div>
 
-  <div class="market-item">
-    <h3>⛏️ Elmas Kazma</h3>
-    <p>Fiyat: 40 WX</p>
-    <button onclick="buy(40,'Elmas Kazma')">Satın Al</button>
+  <!-- SUNUCU DURUMU -->
+  <div class="card center">
+    <h2>🟢 Sunucu Durumu</h2>
+    <p>Online Oyuncu Sayısı</p>
+    <h2 id="players">Yükleniyor...</h2>
   </div>
 
-  <div class="market-item">
-    <h3>🛡️ Full Zırh</h3>
-    <p>Fiyat: 70 WX</p>
-    <button onclick="buy(70,'Full Zırh')">Satın Al</button>
+  <!-- MARKET -->
+  <div class="card center">
+    <h2>🛒 Market</h2>
+    <p style="font-size:18px; color:#ffcc00; font-weight:bold;">
+      Şu an bakımda
+    </p>
+    <p class="small">
+      Market yakında aktif olacaktır.
+    </p>
   </div>
 
-  <button onclick="logout()">Çıkış Yap</button>
-</section>
+  <!-- GÜVENLİK -->
+  <div class="card center">
+    <h2>🛡️ Güvenlik</h2>
+    <p>Site temel koruma altındadır.</p>
+  </div>
+
+</div>
 
 <script>
-let activeUser=null;
-
 function copyIP(){
   navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
-  alert("IP kopyalandı");
+  alert("IP kopyalandı!");
 }
 
-function register(){
-  const u=username.value.trim();
-  const p=password.value.trim();
-  if(!u||!p) return alert("Boş bırakma");
-  if(localStorage.getItem("wg_"+u)) return alert("Kullanıcı var");
-  localStorage.setItem("wg_"+u,JSON.stringify({pass:p,wx:100}));
-  alert("Kayıt başarılı, giriş yap");
-}
-
-function login(){
-  const u=username.value.trim();
-  const p=password.value.trim();
-  const data=localStorage.getItem("wg_"+u);
-  if(!data) return alert("Kullanıcı yok");
-  const obj=JSON.parse(data);
-  if(obj.pass!==p) return alert("Şifre yanlış");
-
-  activeUser=u;
-  auth.classList.add("hidden");
-  user.classList.remove("hidden");
-  market.classList.remove("hidden");
-  userName.innerText=u;
-  wx.innerText=obj.wx;
-}
-
-function buy(price,item){
-  const data=JSON.parse(localStorage.getItem("wg_"+activeUser));
-  if(data.wx<price) return alert("WX yetersiz");
-  data.wx-=price;
-  localStorage.setItem("wg_"+activeUser,JSON.stringify(data));
-  wx.innerText=data.wx;
-  alert(item+" satın alındı!");
-}
-
-function logout(){location.reload();}
-
-async function onlineKontrol(){
-  try{
-    const r=await fetch("https://api.mcstatus.io/v2/status/java/WORTEEXGAME_MC.aternos.me");
-    const d=await r.json();
-    online.innerText=d.online ? d.players.online+" / "+d.players.max : "Kapalı";
-  }catch{online.innerText="Hata";}
-}
-onlineKontrol();
-setInterval(onlineKontrol,10000);
+// GERÇEK ONLINE OYUNCU SAYISI
+fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me")
+.then(res => res.json())
+.then(data => {
+  if(data.online){
+    document.getElementById("players").innerText =
+      data.players.online + " / " + data.players.max;
+  } else {
+    document.getElementById("players").innerText = "Sunucu Kapalı";
+  }
+})
+.catch(() => {
+  document.getElementById("players").innerText = "Hata";
+});
 </script>
 
 </body>
-  </html>
+</html>
