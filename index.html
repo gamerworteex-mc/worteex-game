@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-  padding: 100px 20px;
+  padding: 80px 20px;
 }
 
 h1 {
@@ -22,8 +22,13 @@ h1 {
   margin-bottom: 10px;
 }
 
+h2 {
+  margin-top: 60px;
+  font-size: 32px;
+}
+
 p {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .box {
@@ -35,6 +40,20 @@ p {
   margin-top: 25px;
   backdrop-filter: blur(6px);
   min-width: 260px;
+}
+
+.market {
+  margin-top: 30px;
+  background: rgba(0,0,0,0.4);
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.market span {
+  font-size: 50px;
 }
 
 button {
@@ -69,6 +88,19 @@ button {
 
   <br>
   <button onclick="copyIP()">IP'yi Kopyala</button>
+
+  <!-- MARKET YAKINDA -->
+  <h2>🛒 Market</h2>
+
+  <div class="market">
+    <span>🚧</span>
+    <p><b>Market Yakında Açılıyor</b></p>
+    <p>
+      WX ile item satın alma sistemi<br>
+      çok yakında aktif olacak!
+    </p>
+  </div>
+
 </div>
 
 <script>
