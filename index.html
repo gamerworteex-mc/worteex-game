@@ -1,150 +1,79 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>WORTEEX GAME MC</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>WORTEEXGAME | Minecraft Sunucusu</title>
 
-  <!-- Basit koruma -->
-  <meta name="robots" content="noarchive">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #fff;
-      text-align: center;
-      background: 
-        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)),
-        url("https://images.unsplash.com/photo-1605902711622-cfb43c4437b5");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
+  /* ARKA PLAN FOTOĞRAF */
+  background:
+    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)),
+    url("1769946225138.png");
 
-    header {
-      padding: 80px 20px 40px;
-    }
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
-    .logo {
-      font-size: 48px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #00ffd5;
-      text-shadow: 0 0 15px rgba(0,255,213,0.6);
-    }
+.container {
+  padding: 100px 20px;
+}
 
-    .subtitle {
-      font-size: 18px;
-      opacity: 0.9;
-      margin-top: 10px;
-    }
+h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
 
-    .card {
-      background: rgba(0,0,0,0.6);
-      margin: 25px auto;
-      padding: 25px;
-      max-width: 420px;
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(0,0,0,0.7);
-    }
+.ip-box {
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  border-radius: 12px;
+  display: inline-block;
+  font-size: 20px;
+  margin-top: 30px;
+}
 
-    .ip {
-      font-size: 20px;
-      margin: 10px 0;
-      word-break: break-all;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 12px 26px;
-      font-size: 16px;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      background: #00ffd5;
-      color: #000;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #00cfae;
-    }
-
-    .status {
-      font-size: 18px;
-      margin-top: 10px;
-    }
-
-    footer {
-      margin-top: 60px;
-      padding: 20px;
-      font-size: 14px;
-      opacity: 0.7;
-    }
-  </style>
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #00ffd5;
+  color: black;
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">WORTEEX GAME</div>
-    <div class="subtitle">Minecraft Sunucusu</div>
-  </header>
+<div class="container">
+  <h1>WORTEEXGAME</h1>
+  <p>Minecraft Sunucusu</p>
 
-  <div class="card">
-    <h2>🎮 Sunucu IP</h2>
-    <div class="ip" id="ip">WORTEEXGAME_MC.aternos.me</div>
-    <button onclick="copyIP()">IP'yi Kopyala</button>
+  <div class="ip-box">
+    Sunucu IP:<br>
+    <b>WORTEEXGAME_MC.aternos.me</b>
   </div>
 
-  <div class="card">
-    <h2>📊 Sunucu Durumu</h2>
-    <div class="status" id="status">Yükleniyor...</div>
-  </div>
+  <br>
+  <button onclick="copyIP()">IP'yi Kopyala</button>
+</div>
 
-  <div class="card">
-    <h2>🛒 Market</h2>
-    <p>Market yakında aktif olacaktır.</p>
-    <p>Şimdilik satın alımlar Discord üzerinden yapılmaktadır.</p>
-
-    <button onclick="alert('Discord yakında eklenecek')">
-      💬 Discord
-    </button>
-  </div>
-
-  <footer>
-    © 2026 WORTEEX GAME | Tüm hakları saklıdır
-  </footer>
-
-  <script>
-    // IP kopyalama
-    function copyIP() {
-      const ip = document.getElementById("ip").innerText;
-      navigator.clipboard.writeText(ip);
-      alert("IP kopyalandı: " + ip);
-    }
-
-    // Online oyuncu sayısı
-    fetch("https://api.mcapi.us/server/status?ip=WORTEEXGAME_MC.aternos.me")
-      .then(res => res.json())
-      .then(data => {
-        const statusEl = document.getElementById("status");
-        if (data.online) {
-          statusEl.innerHTML = 
-            "🟢 Online<br>" +
-            "Oyuncular: " + data.players.now + " / " + data.players.max;
-        } else {
-          statusEl.innerHTML = "🔴 Offline";
-        }
-      })
-      .catch(() => {
-        document.getElementById("status").innerHTML = "❌ Durum alınamadı";
-      });
-
-    // Sağ tık kapatma (basit koruma)
-    document.addEventListener("contextmenu", e => e.preventDefault());
-  </script>
+<script>
+function copyIP() {
+  navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
+  alert("IP kopyalandı!");
+}
+</script>
 
 </body>
-  </html>
+</html>
