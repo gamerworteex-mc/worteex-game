@@ -2,180 +2,146 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>WORTEEX GAME</title>
+<title>WORTEEX GAME | Minecraft Sunucusu</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Basit güvenlik başlıkları -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(circle at top,#0e1b2e,#05070d);
+  background:radial-gradient(circle at top,#0d1b2a,#05070d);
   color:white;
-}
-.container{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.card{
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(10px);
-  padding:25px;
-  width:90%;
-  max-width:380px;
-  border-radius:18px;
-  box-shadow:0 0 40px rgba(0,200,255,.25);
   text-align:center;
 }
-.logo{
-  max-width:260px;
-  margin-bottom:15px;
-  filter:drop-shadow(0 0 20px rgba(0,200,255,.7));
+section{
+  padding:35px 15px;
 }
+.logo{
+  max-width:320px;
+  filter:drop-shadow(0 0 25px #00e5ff);
+}
+.box{
+  background:rgba(255,255,255,0.06);
+  margin:20px auto;
+  padding:25px;
+  max-width:520px;
+  border-radius:18px;
+  box-shadow:0 0 35px rgba(0,0,0,0.6);
+}
+button{
+  padding:12px 22px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin:5px;
+}
+button:hover{opacity:0.85;}
 input{
-  width:90%;
-  padding:12px;
+  width:80%;
+  padding:11px;
   margin:6px 0;
   border-radius:10px;
   border:none;
-  font-size:15px;
-}
-button{
-  width:95%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  background:linear-gradient(135deg,#00c6ff,#0072ff);
-  color:white;
-}
-.link{
-  margin-top:10px;
-  font-size:14px;
-  color:#aaa;
-  cursor:pointer;
 }
 .hidden{display:none;}
-.stat{margin:10px 0;font-size:17px;}
-.wx{color:#ffd700;font-weight:bold;}
-.online{color:#00ffcc;}
-.ip{font-weight:bold;}
+.green{color:#00ff9d;}
+.yellow{color:gold;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<!-- GİRİŞ -->
-<div class="card" id="loginBox">
+<!-- LOGO -->
+<section>
   <img src="1769948637901.png" class="logo">
-  <h3>Giriş Yap</h3>
-  <input id="loginUser" placeholder="Kullanıcı adı">
-  <input id="loginPass" type="password" placeholder="Şifre">
+</section>
+
+<!-- SUNUCU BİLGİLERİ -->
+<section class="box">
+  <h2>🌍 Sunucu Durumu</h2>
+  <p><b>IP:</b> <span id="ip">WORTEEXGAME_MC.aternos.me</span></p>
+  <button onclick="copyIP()">IP Kopyala</button>
+  <p>👥 Online Oyuncu: <span id="online" class="green">Yükleniyor...</span></p>
+</section>
+
+<!-- GİRİŞ / KAYIT -->
+<section id="auth" class="box">
+  <h2>🔐 Giriş / Kayıt</h2>
+  <input id="username" placeholder="Kullanıcı Adı">
+  <input id="password" type="password" placeholder="Şifre">
+  <br>
   <button onclick="login()">Giriş Yap</button>
-  <div class="link" onclick="showRegister()">Hesabın yok mu? Kayıt ol</div>
-</div>
-
-<!-- KAYIT -->
-<div class="card hidden" id="registerBox">
-  <img src="1769948637901.png" class="logo">
-  <h3>Kayıt Ol</h3>
-  <input id="regUser" placeholder="Kullanıcı adı">
-  <input id="regPass" type="password" placeholder="Şifre">
   <button onclick="register()">Kayıt Ol</button>
-  <div class="link" onclick="showLogin()">Zaten hesabım var</div>
-</div>
+</section>
 
-<!-- PANEL -->
-<div class="card hidden" id="panel">
-  <img src="1769948637901.png" class="logo">
-  <h3 id="welcome"></h3>
-
-  <div class="stat">🌐 Sunucu IP<br>
-    <span class="ip">WORTEEXGAME_MC.aternos.me</span>
-  </div>
-
-  <div class="stat">👥 Online Oyuncu<br>
-    <span class="online" id="onlineCount">Yükleniyor</span>
-  </div>
-
-  <div class="stat">💰 WX Bakiyesi<br>
-    <span class="wx" id="wx">0</span>
-  </div>
-
+<!-- KULLANICI ALANI (ESKİ TARZ BOZULMADAN) -->
+<section id="user" class="box hidden">
+  <h2>👋 Hoş geldin, <span id="userName"></span></h2>
+  <p>💰 WX Bakiyesi: <span id="wx" class="yellow"></span></p>
+  <p>🌍 Sunucu IP: <b>WORTEEXGAME_MC.aternos.me</b></p>
   <button onclick="logout()">Çıkış Yap</button>
-</div>
-
-</div>
+</section>
 
 <script>
-function showRegister(){
-  loginBox.classList.add("hidden");
-  registerBox.classList.remove("hidden");
-}
-function showLogin(){
-  registerBox.classList.add("hidden");
-  loginBox.classList.remove("hidden");
+/* IP KOPYALA */
+function copyIP(){
+  navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
+  alert("IP kopyalandı!");
 }
 
+/* GİRİŞ / KAYIT (site içi demo) */
 function register(){
-  const u=regUser.value.trim();
-  const p=regPass.value;
-  if(!u||!p){alert("Boş bırakma");return;}
-  if(localStorage.getItem("wg_"+u)){
-    alert("Bu kullanıcı var");return;
-  }
-  localStorage.setItem("wg_"+u,JSON.stringify({
-    pass:p,
-    wx:100
-  }));
-  localStorage.setItem("wg_active",u);
-  loadUser();
+  const u=username.value.trim();
+  const p=password.value.trim();
+  if(!u || !p) return alert("Boş bırakma");
+  if(localStorage.getItem("wg_"+u)) return alert("Bu kullanıcı var");
+  localStorage.setItem("wg_"+u, JSON.stringify({pass:p, wx:100}));
+  alert("Kayıt başarılı, giriş yap");
 }
 
 function login(){
-  const u=loginUser.value.trim();
-  const p=loginPass.value;
+  const u=username.value.trim();
+  const p=password.value.trim();
   const data=localStorage.getItem("wg_"+u);
-  if(!data){alert("Kullanıcı yok");return;}
-  const d=JSON.parse(data);
-  if(d.pass!==p){alert("Şifre yanlış");return;}
-  localStorage.setItem("wg_active",u);
-  loadUser();
+  if(!data) return alert("Kullanıcı yok");
+  const obj=JSON.parse(data);
+  if(obj.pass!==p) return alert("Şifre yanlış");
+
+  auth.classList.add("hidden");
+  user.classList.remove("hidden");
+  userName.innerText=u;
+  wx.innerText=obj.wx;
 }
 
 function logout(){
-  localStorage.removeItem("wg_active");
   location.reload();
 }
 
-function loadUser(){
-  const u=localStorage.getItem("wg_active");
-  if(!u) return;
-  loginBox.classList.add("hidden");
-  registerBox.classList.add("hidden");
-  panel.classList.remove("hidden");
-  welcome.innerText="Hoş geldin, "+u;
-  const d=JSON.parse(localStorage.getItem("wg_"+u));
-  wx.innerText=d.wx;
-}
-
-async function online(){
+/* GERÇEK ONLINE OYUNCU SAYISI */
+async function onlineKontrol(){
   try{
-    const r=await fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me");
-    const d=await r.json();
-    onlineCount.innerText=d.online ? d.players.online+" / "+d.players.max : "Kapalı";
+    const r = await fetch("https://api.mcstatus.io/v2/status/java/WORTEEXGAME_MC.aternos.me");
+    const d = await r.json();
+    if(d.online){
+      document.getElementById("online").innerText =
+        d.players.online + " / " + d.players.max;
+    }else{
+      document.getElementById("online").innerText = "Sunucu Kapalı";
+    }
   }catch{
-    onlineCount.innerText="Hata";
+    document.getElementById("online").innerText = "Kontrol Edilemiyor";
   }
 }
-
-loadUser();
-online();
-setInterval(online,5000);
+onlineKontrol();
+setInterval(onlineKontrol,10000);
 </script>
 
 </body>
