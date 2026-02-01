@@ -1,32 +1,102 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WORTEEX GAME | Minecraft Sunucusu</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
-    body{
-      margin:0;
-      font-family:'Orbitron',Arial,sans-serif;
-      color:#e5e7eb;
-      background:
-        linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.85)),
-        radial-gradient(circle at top,#0f172a,#020617);
-      min-height:100vh;
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      text-align: center;
     }
-    header{
-      text-align:center;
-      padding:32px 16px;
-      font-size:36px;
-      letter-spacing:3px;
+
+    header {
+      padding: 60px 20px;
     }
-    header span{color:#22c55e}
-    .container{
-      display:flex;justify-content:center;padding:20px;
+
+    h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
     }
-    .card{
-      background:rgba(2,6,23,.85);
-      border-radius:18px;
-      padding:40px;
-      
+
+    h2 {
+      font-weight: normal;
+      color: #00ffd5;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(0,0,0,0.4);
+      margin: 20px auto;
+      padding: 25px;
+      max-width: 420px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,255,213,0.3);
+    }
+
+    .ip-box {
+      font-size: 20px;
+      margin-bottom: 15px;
+      word-break: break-all;
+    }
+
+    button {
+      background: #00ffd5;
+      border: none;
+      color: #000;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #00cfae;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>WORTEEX GAME</h1>
+    <h2>Minecraft Sunucusu</h2>
+  </header>
+
+  <div class="card">
+    <div class="ip-box">
+      <strong>Sunucu IP:</strong><br>
+      <span id="ip">WORTEEXGAME_MC.aternos.me</span>
+    </div>
+
+    <button onclick="copyIP()">IP'yi Kopyala</button>
+  </div>
+
+  <footer>
+    © 2026 WORTEEX GAME<br>
+    Tüm hakları saklıdır.
+  </footer>
+
+  <script>
+    function copyIP() {
+      const ipText = document.getElementById("ip").innerText;
+      navigator.clipboard.writeText(ipText);
+      alert("IP kopyalandı: " + ipText);
+    }
+  </script>
+
+</body>
+</html>
