@@ -10,7 +10,7 @@ body {
   font-family: Arial, sans-serif;
   color: white;
   text-align: center;
-  background: #0f172a; /* koyu lacivert */
+  background: #0f172a;
 }
 
 .container {
@@ -26,14 +26,15 @@ p {
   opacity: 0.8;
 }
 
-.ip-box {
+.box {
   background: rgba(255,255,255,0.08);
   padding: 20px;
   border-radius: 12px;
   display: inline-block;
   font-size: 20px;
-  margin-top: 30px;
+  margin-top: 25px;
   backdrop-filter: blur(6px);
+  min-width: 260px;
 }
 
 button {
@@ -55,9 +56,15 @@ button {
   <h1>WORTEEXGAME</h1>
   <p>Minecraft Sunucusu</p>
 
-  <div class="ip-box">
+  <div class="box">
     Sunucu IP:<br>
     <b>WORTEEXGAME_MC.aternos.me</b>
+  </div>
+
+  <br>
+
+  <div class="box" id="onlineBox">
+    🟡 Sunucu durumu kontrol ediliyor...
   </div>
 
   <br>
@@ -65,10 +72,31 @@ button {
 </div>
 
 <script>
+const serverIP = "WORTEEXGAME_MC.aternos.me";
+
 function copyIP() {
-  navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
+  navigator.clipboard.writeText(serverIP);
   alert("IP kopyalandı!");
 }
+
+fetch("https://api.mcsrvstat.us/2/" + serverIP)
+  .then(res => res.json())
+  .then(data => {
+    const box = document.getElementById("onlineBox");
+
+    if (data.online) {
+      box.innerHTML = `
+        🟢 Sunucu Online<br>
+        👥 Oyuncular: <b>${data.players.online}</b> / ${data.players.max}
+      `;
+    } else {
+      box.innerHTML = "🔴 Sunucu Offline";
+    }
+  })
+  .catch(() => {
+    document.getElementById("onlineBox").innerText =
+      "⚠️ Sunucu bilgisi alınamadı";
+  });
 </script>
 
 </body>
