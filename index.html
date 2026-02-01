@@ -1,122 +1,108 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>WORTEEX GAME | Minecraft Sunucusu</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>WORTEEX GAME</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #0b1a2a, #05070d);
-      color: white;
-      text-align: center;
-    }
-
-    header {
-      padding: 25px 10px;
-    }
-
-    .logo {
-      max-width: 320px;
-      width: 90%;
-      filter: drop-shadow(0 0 30px rgba(0,200,255,0.9));
-    }
-
-    .box {
-      background: rgba(255,255,255,0.06);
-      margin: 20px auto;
-      padding: 20px;
-      max-width: 360px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    }
-
-    .ip {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      word-break: break-all;
-    }
-
-    button {
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      border: none;
-      color: white;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .online {
-      font-size: 20px;
-      margin-top: 10px;
-      color: #00ffcc;
-      font-weight: bold;
-    }
-
-    footer {
-      margin: 30px 0;
-      font-size: 13px;
-      opacity: 0.6;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:radial-gradient(circle,#0b1a2a,#05070d);
+  color:white;
+  text-align:center;
+}
+.logo{max-width:300px;margin:25px auto;display:block;}
+.box{
+  background:rgba(255,255,255,0.07);
+  padding:20px;
+  margin:20px auto;
+  max-width:360px;
+  border-radius:15px;
+}
+input{
+  width:90%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+button{
+  margin-top:10px;
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:white;
+}
+.online{color:#00ffcc;font-size:20px;margin-top:10px;}
+.hidden{display:none;}
+</style>
 </head>
 
 <body>
 
-  <!-- LOGO -->
-  <header>
-    <img src="1769948637901.png" alt="WORTEEX GAME Logo" class="logo">
-  </header>
+<img src="1769948637901.png" class="logo">
 
-  <!-- SUNUCU IP -->
-  <div class="box">
-    <div class="ip" id="serverIp">WORTEEXGAME_MC.aternos.me</div>
-    <button onclick="copyIP()">IP Kopyala</button>
-  </div>
+<!-- GİRİŞ -->
+<div class="box" id="loginBox">
+  <h3>Oyuncu Girişi</h3>
+  <input id="username" placeholder="Minecraft kullanıcı adın">
+  <button onclick="login()">Giriş Yap</button>
+</div>
 
-  <!-- ONLINE OYUNCU -->
-  <div class="box">
-    <div>Online Oyuncular</div>
-    <div class="online" id="onlineCount">Yükleniyor...</div>
-  </div>
+<!-- PANEL -->
+<div class="box hidden" id="panel">
+  <h3 id="welcome"></h3>
+  <p>Sunucu IP:</p>
+  <b>WORTEEXGAME_MC.aternos.me</b><br><br>
 
-  <footer>
-    © 2026 WORTEEX GAME • Tüm Hakları Saklıdır
-  </footer>
+  <div>Online Oyuncular</div>
+  <div class="online" id="onlineCount">Yükleniyor...</div>
 
-  <script>
-    function copyIP() {
-      navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
-      alert("IP kopyalandı!");
-    }
+  <br>
+  <button onclick="logout()">Çıkış Yap</button>
+</div>
 
-    async function getOnlinePlayers() {
-      try {
-        const res = await fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me");
-        const data = await res.json();
+<script>
+function login(){
+  const user=document.getElementById("username").value.trim();
+  if(!user){alert("Kullanıcı adı gir");return;}
+  localStorage.setItem("wg_user",user);
+  loadUser();
+}
 
-        if (data.online) {
-          document.getElementById("onlineCount").innerText =
-            data.players.online + " / " + data.players.max;
-        } else {
-          document.getElementById("onlineCount").innerText = "Sunucu Kapalı";
-        }
-      } catch {
-        document.getElementById("onlineCount").innerText = "Hata";
-      }
-    }
+function logout(){
+  localStorage.removeItem("wg_user");
+  location.reload();
+}
 
-    getOnlinePlayers();
-    setInterval(getOnlinePlayers, 5000);
-  </script>
+function loadUser(){
+  const user=localStorage.getItem("wg_user");
+  if(user){
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+    document.getElementById("welcome").innerText="Hoş geldin, "+user;
+  }
+}
+
+async function online(){
+  try{
+    const r=await fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me");
+    const d=await r.json();
+    document.getElementById("onlineCount").innerText=
+      d.online ? d.players.online+" / "+d.players.max : "Sunucu Kapalı";
+  }catch{
+    document.getElementById("onlineCount").innerText="Hata";
+  }
+}
+
+loadUser();
+online();
+setInterval(online,5000);
+</script>
 
 </body>
 </html>
