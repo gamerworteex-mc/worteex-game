@@ -13,9 +13,9 @@ body{
   color:white;
   text-align:center;
 }
-.logo{max-width:300px;margin:25px auto;display:block;}
+.logo{max-width:280px;margin:20px auto;display:block;}
 .box{
-  background:rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.08);
   padding:20px;
   margin:20px auto;
   max-width:360px;
@@ -24,21 +24,29 @@ body{
 input{
   width:90%;
   padding:12px;
+  margin:5px 0;
   border-radius:10px;
   border:none;
   font-size:16px;
 }
 button{
-  margin-top:10px;
   padding:12px 20px;
   border:none;
   border-radius:10px;
   font-size:16px;
   background:linear-gradient(135deg,#00c6ff,#0072ff);
   color:white;
+  margin-top:10px;
 }
-.online{color:#00ffcc;font-size:20px;margin-top:10px;}
+.small{
+  font-size:14px;
+  color:#aaa;
+  cursor:pointer;
+}
 .hidden{display:none;}
+.stat{margin:8px 0;font-size:18px;}
+.wx{color:#ffd700;font-weight:bold;}
+.online{color:#00ffcc;}
 </style>
 </head>
 
@@ -48,54 +56,85 @@ button{
 
 <!-- GİRİŞ -->
 <div class="box" id="loginBox">
-  <h3>Oyuncu Girişi</h3>
-  <input id="username" placeholder="Minecraft kullanıcı adın">
-  <button onclick="login()">Giriş Yap</button>
+  <h3>Giriş Yap</h3>
+  <input id="loginUser" placeholder="Kullanıcı adı">
+  <button onclick="login()">Giriş</button>
+  <div class="small" onclick="showRegister()">Hesabın yok mu? Kayıt ol</div>
+</div>
+
+<!-- KAYIT -->
+<div class="box hidden" id="registerBox">
+  <h3>Kayıt Ol</h3>
+  <input id="regUser" placeholder="Kullanıcı adı">
+  <button onclick="register()">Kayıt</button>
+  <div class="small" onclick="showLogin()">Zaten hesabım var</div>
 </div>
 
 <!-- PANEL -->
 <div class="box hidden" id="panel">
   <h3 id="welcome"></h3>
-  <p>Sunucu IP:</p>
-  <b>WORTEEXGAME_MC.aternos.me</b><br><br>
 
-  <div>Online Oyuncular</div>
-  <div class="online" id="onlineCount">Yükleniyor...</div>
+  <div class="stat">🌐 Sunucu IP:<br><b>WORTEEXGAME_MC.aternos.me</b></div>
+  <div class="stat">👥 Online Oyuncu: <span class="online" id="onlineCount">Yükleniyor</span></div>
+  <div class="stat">💰 WX Bakiyesi: <span class="wx" id="wx">0</span></div>
 
-  <br>
   <button onclick="logout()">Çıkış Yap</button>
 </div>
 
 <script>
+function showRegister(){
+  loginBox.classList.add("hidden");
+  registerBox.classList.remove("hidden");
+}
+function showLogin(){
+  registerBox.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+}
+
+function register(){
+  const u=regUser.value.trim();
+  if(!u){alert("Kullanıcı adı gir");return;}
+  if(localStorage.getItem("user_"+u)){
+    alert("Bu kullanıcı var");
+    return;
+  }
+  localStorage.setItem("user_"+u,JSON.stringify({wx:100}));
+  localStorage.setItem("wg_active",u);
+  loadUser();
+}
+
 function login(){
-  const user=document.getElementById("username").value.trim();
-  if(!user){alert("Kullanıcı adı gir");return;}
-  localStorage.setItem("wg_user",user);
+  const u=loginUser.value.trim();
+  const data=localStorage.getItem("user_"+u);
+  if(!data){alert("Kayıt bulunamadı");return;}
+  localStorage.setItem("wg_active",u);
   loadUser();
 }
 
 function logout(){
-  localStorage.removeItem("wg_user");
+  localStorage.removeItem("wg_active");
   location.reload();
 }
 
 function loadUser(){
-  const user=localStorage.getItem("wg_user");
-  if(user){
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("panel").classList.remove("hidden");
-    document.getElementById("welcome").innerText="Hoş geldin, "+user;
-  }
+  const u=localStorage.getItem("wg_active");
+  if(!u) return;
+  loginBox.classList.add("hidden");
+  registerBox.classList.add("hidden");
+  panel.classList.remove("hidden");
+  welcome.innerText="Hoş geldin, "+u;
+
+  const d=JSON.parse(localStorage.getItem("user_"+u));
+  wx.innerText=d.wx;
 }
 
 async function online(){
   try{
     const r=await fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me");
     const d=await r.json();
-    document.getElementById("onlineCount").innerText=
-      d.online ? d.players.online+" / "+d.players.max : "Sunucu Kapalı";
+    onlineCount.innerText=d.online?d.players.online+" / "+d.players.max:"Kapalı";
   }catch{
-    document.getElementById("onlineCount").innerText="Hata";
+    onlineCount.innerText="Hata";
   }
 }
 
