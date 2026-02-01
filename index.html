@@ -6,28 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 
 body{
   min-height:100vh;
   background:
-    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
     url("https://images.alphacoders.com/132/1329014.jpeg");
   background-size:cover;
   background-position:center;
   color:white;
 }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:30px;
-}
+.container{max-width:900px;margin:auto;padding:25px}
 
 .card{
   background:rgba(0,0,0,0.65);
@@ -37,36 +28,30 @@ body{
   box-shadow:0 0 20px rgba(0,0,0,0.8);
 }
 
-h1{
-  text-align:center;
-  color:#00ff88;
-  margin-bottom:10px;
-}
+.center{text-align:center}
+h1{color:#00ff88;margin-bottom:10px}
 
-.center{
-  text-align:center;
+input{
+  width:90%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:6px;
+  border:none;
 }
 
 .btn{
-  display:inline-block;
-  margin:8px;
-  padding:12px 20px;
+  padding:10px 20px;
   background:#00ff88;
-  color:black;
-  text-decoration:none;
+  border:none;
   border-radius:8px;
   font-weight:bold;
   cursor:pointer;
+  margin:5px;
 }
 
-.btn:hover{
-  background:#00cc6f;
-}
-
-.small{
-  color:#ccc;
-  font-size:14px;
-}
+.btn:hover{background:#00cc6f}
+.small{color:#ccc;font-size:14px}
+.hidden{display:none}
 </style>
 </head>
 
@@ -74,60 +59,93 @@ h1{
 
 <div class="container">
 
-  <!-- BAŞLIK -->
+<!-- GİRİŞ / KAYIT -->
+<div class="card center" id="auth">
+  <h1>WORTEEX GAME</h1>
+  <p>Minecraft Sunucusu</p>
+
+  <input id="user" placeholder="Kullanıcı Adı">
+  <input id="pass" type="password" placeholder="Şifre">
+
+  <br>
+  <button class="btn" onclick="register()">Kayıt Ol</button>
+  <button class="btn" onclick="login()">Giriş Yap</button>
+</div>
+
+<!-- ANA PANEL -->
+<div id="panel" class="hidden">
+
   <div class="card center">
     <h1>WORTEEX GAME</h1>
-    <p>Minecraft Sunucusu</p>
-    <p class="small">IP: <b id="ip">WORTEEXGAME_MC.aternos.me</b></p>
+    <p class="small">IP: <b>WORTEEXGAME_MC.aternos.me</b></p>
     <button class="btn" onclick="copyIP()">IP Kopyala</button>
+    <p id="welcome"></p>
   </div>
 
-  <!-- SUNUCU DURUMU -->
   <div class="card center">
     <h2>🟢 Sunucu Durumu</h2>
-    <p>Online Oyuncu Sayısı</p>
     <h2 id="players">Yükleniyor...</h2>
   </div>
 
-  <!-- MARKET -->
   <div class="card center">
     <h2>🛒 Market</h2>
-    <p style="font-size:18px; color:#ffcc00; font-weight:bold;">
+    <p style="color:#ffcc00;font-weight:bold;font-size:18px">
       Şu an bakımda
     </p>
-    <p class="small">
-      Market yakında aktif olacaktır.
-    </p>
+    <p class="small">Market yakında aktif olacaktır.</p>
   </div>
 
-  <!-- GÜVENLİK -->
   <div class="card center">
-    <h2>🛡️ Güvenlik</h2>
-    <p>Site temel koruma altındadır.</p>
+    <button class="btn" onclick="logout()">Çıkış Yap</button>
   </div>
 
 </div>
 
+</div>
+
 <script>
+// AUTH
+function register(){
+  let u=user.value, p=pass.value;
+  if(!u||!p) return alert("Boş bırakma");
+  localStorage.setItem("u_"+u,p);
+  alert("Kayıt başarılı, giriş yap");
+}
+
+function login(){
+  let u=user.value, p=pass.value;
+  if(localStorage.getItem("u_"+u)===p){
+    localStorage.setItem("active",u);
+    showPanel();
+  }else alert("Hatalı giriş");
+}
+
+function logout(){
+  localStorage.removeItem("active");
+  location.reload();
+}
+
+function showPanel(){
+  auth.classList.add("hidden");
+  panel.classList.remove("hidden");
+  welcome.innerText="Hoşgeldin, "+localStorage.getItem("active");
+}
+
+// IP
 function copyIP(){
   navigator.clipboard.writeText("WORTEEXGAME_MC.aternos.me");
   alert("IP kopyalandı!");
 }
 
-// GERÇEK ONLINE OYUNCU SAYISI
+// ONLINE OYUNCU
 fetch("https://api.mcsrvstat.us/2/WORTEEXGAME_MC.aternos.me")
-.then(res => res.json())
-.then(data => {
-  if(data.online){
-    document.getElementById("players").innerText =
-      data.players.online + " / " + data.players.max;
-  } else {
-    document.getElementById("players").innerText = "Sunucu Kapalı";
-  }
-})
-.catch(() => {
-  document.getElementById("players").innerText = "Hata";
+.then(r=>r.json())
+.then(d=>{
+  players.innerText=d.online ? d.players.online+" / "+d.players.max : "Sunucu Kapalı";
 });
+
+// AUTO LOGIN
+if(localStorage.getItem("active")) showPanel();
 </script>
 
 </body>
